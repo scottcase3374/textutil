@@ -15,7 +15,7 @@ public enum XLIFFResourceTypes implements Resource
 {
     COUNTRIES("countries", "country", "/data/%s/%s/country.xliff");
 
-    XLIFFResourceTypes(String path, String file, String pathTemplate)
+    XLIFFResourceTypes(final String path, final String file, final String pathTemplate)
     {
         this.path = path;
         this.file = file;
@@ -23,7 +23,7 @@ public enum XLIFFResourceTypes implements Resource
     }
 
     /**
-     * luf
+     *
      * @param key
      * @param tgtlocaleid
 
@@ -37,9 +37,8 @@ public enum XLIFFResourceTypes implements Resource
         try (RawDocument rd = new RawDocument(
                 TextUtil.class.getResourceAsStream(firstValidLocalePath(tgtlocaleid, key).orElse("EN")), "UTF-8", LocaleId.US_ENGLISH, tgtlocaleid);
                 )
-
         {
-            try (XLIFFFilter reader = new XLIFFFilter();)
+            try (final XLIFFFilter reader = new XLIFFFilter();)
             {
                 reader.open(rd, true);
                 // Loop through the reader events
@@ -50,14 +49,9 @@ public enum XLIFFResourceTypes implements Resource
                     // Do something: here print the source content
                     if (event.isTextUnit() && event.getTextUnit().getId().equals(getFile() + "." + key))
                     {
-                        ITextUnit unit = event.getTextUnit();
-
-                        log.info("unit id: " + unit.getId());
-
+                        final ITextUnit unit = event.getTextUnit();
                         net.sf.okapi.common.resource.Segment s = unit.getTargetSegment(tgtlocaleid, "0", false);
-                        log.info("tgt unit seg text: " + s.text.getText());
                         retVal = s.text.getText();
-
                     }
                 }
             }
@@ -97,9 +91,10 @@ public enum XLIFFResourceTypes implements Resource
     {
         return pathTemplate;
     }
-    private String path;
-    private String file;
-    private String pathTemplate;
 
-    private static Logger log = Logger.getLogger(TextUtil.class.getName());
+    private final String path;
+    private final String file;
+    private final String pathTemplate;
+
+    private static final Logger log = Logger.getLogger(TextUtil.class.getName());
 }
